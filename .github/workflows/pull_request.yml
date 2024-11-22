@@ -1,11 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Pull Request Validation
 
 on:
   push:
@@ -15,14 +8,18 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
     environment:
-      name: dev
+      name: stg
 
     steps:
+      - uses: bhowell2/github-substring-action@1.0.2
+        id: commit-short
+        with:
+          value: ${{ github.event.after }}
+          length_from_start: 7
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -48,19 +45,27 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  docker:
-  # will it work??
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      # Check out the repository
-      - uses: actions/checkout@v4
-
-      # Run Docker Compose Action
-      - uses: adambirds/docker-compose-action@v1.5.0
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          compose-file: "./docker/docker-compose.yml"
-          up-flags: "--build"
-          down-flags: "--volumes"
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        id: publish
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: rafaelcorreaa/wardrobe-manager:${{ steps.commit-short.outputs.substring }}
+
+      - name: Deploy to Render
+        uses: gh-actions-workflows/deploy-docker-render@v1.3
+        with:
+          deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          image-url: rafaelcorreaa/wardrobe-manager:${{ steps.commit-short.outputs.substring }}
+          render-api-key: ${{ secrets.RENDER_API_KEY }}
+          wait-for-deployment: true
+
+      - name: Environment URL
+        run: echo ${{ vars.ENV_URL }}
