@@ -1,4 +1,4 @@
-name: Pull Request Validation
+name: Pull Request / Push to Main Validation
 
 on:
   push:
@@ -15,16 +15,20 @@ jobs:
       name: stg
 
     steps:
-      - uses: bhowell2/github-substring-action@1.0.2
+      - name: Get short commit hash
         id: commit-short
+        uses: bhowell2/github-substring-action@1.0.2
         with:
           value: ${{ github.event.after }}
           length_from_start: 7
 
-      - id: img-url
+      - name: Record docker image URL
+        id: img-url
         run: echo "string=rafaelcorreaa/wardrobe-manager:${{ steps.commit-short.outputs.substring }}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -41,7 +45,7 @@ jobs:
 
       # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
       # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-      - name: Generate and submit dependency graph
+      - name: Generate and submit dependency graph (only on pushes to main)
         uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
       - name: SonarCloud Scan
@@ -71,5 +75,5 @@ jobs:
           render-api-key: ${{ secrets.RENDER_API_KEY }}
           wait-for-deployment: true
 
-      - name: Environment URL
+      - name: Log environment URL
         run: echo ${{ vars.ENV_URL }}
