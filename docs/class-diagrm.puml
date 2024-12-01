@@ -1,0 +1,39 @@
+@startuml
+'https://plantuml.com/class-diagram
+'H&M category base https://rapidapi.com/apidojo/api/hm-hennes-mauritz/playground/5c336e0ee4b0b136b4746074
+
+class Piece {
+    String id
+    String description
+    String brandCode
+    String predominantColorHex
+    String categoryCode
+    String fabric
+    List<URI> images
+    List<URI> links
+}
+
+class Brand {
+    String code
+    String name
+    String url
+}
+
+class User {
+    String email
+    String firstName
+    String lastName
+    List<Piece> wardrobe
+}
+
+class Group {
+    User owner
+    List<User> members
+    List<Piece> wardrobe
+}
+
+User ..> Piece
+Group ..> User
+Piece ..> Brand
+
+@enduml
