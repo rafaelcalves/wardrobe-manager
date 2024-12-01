@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Jacksonized
 @AllArgsConstructor
 public class Piece {
+    private String code;
     private String description;
     private Brand brand;
     private String predominantColorHex;
@@ -24,6 +25,7 @@ public class Piece {
     public String toString() {
         return """
                 {
+                    "code": "%s",
                     "description": "%s",
                     "brand": %s,
                     "predominantColorHex":"%s",
@@ -32,7 +34,7 @@ public class Piece {
                     "images": %s,
                     "links": %s,
                     "class": "%s"
-                }""".formatted(this.description, this.brand, this.predominantColorHex, this.category,
+                }""".formatted(this.code, this.description, this.brand, this.predominantColorHex, this.category,
                 this.fabric, printList(this.images), printList(this.links), this.getClass().getName());
     }
 
