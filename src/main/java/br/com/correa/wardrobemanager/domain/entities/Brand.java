@@ -1,11 +1,15 @@
 package br.com.correa.wardrobemanager.domain.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 import java.net.URI;
 
 @Builder
+@Jacksonized
+@AllArgsConstructor
 public class Brand {
     @Getter
     private String code;
