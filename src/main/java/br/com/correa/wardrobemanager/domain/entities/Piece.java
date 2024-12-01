@@ -22,16 +22,18 @@ public class Piece {
 
     @Override
     public String toString() {
-        return "{" +
-                "\"description\":\"" + description + "\"," +
-                "\"brand\":" + brand + "," +
-                "\"predominantColorHex\":\"" + predominantColorHex + "\"," +
-                "\"category\":" + category + "," +
-                "\"fabric\":\"" + fabric + "\"," +
-                "\"images\":" + printList(images) + "," +
-                "\"links\":" + printList(links) + "," +
-                "\"class\":\"" + this.getClass().getName() + "\"" +
-                "}";
+        return """
+                {
+                    "description": "%s",
+                    "brand": %s,
+                    "predominantColorHex":"%s",
+                    "category": %s,
+                    "fabric": "%s",
+                    "images": %s,
+                    "links": %s,
+                    "class": "%s"
+                }""".formatted(this.description, this.brand, this.predominantColorHex, this.category,
+                this.fabric, printList(this.images), printList(this.links), this.getClass().getName());
     }
 
     private String printList(List<?> list) {
