@@ -1,0 +1,7 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USER:root}:${MONGODB_PASSWORD:pass}@mongodb-network:27017/wardrobemanagerdb
