@@ -3,7 +3,7 @@
   "description": "piece_description",
   "brandCode": "brand_code",
   "predominantColorHex": "#FFFFFF",
-  "categoryValue": "category_value",
+  "categoryCode": "category_code",
   "fabric": "piece_fabric",
   "images": [
     "https://www.image.com"

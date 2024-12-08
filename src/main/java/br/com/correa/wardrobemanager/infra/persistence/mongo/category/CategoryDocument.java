@@ -15,6 +15,6 @@ public class CategoryDocument {
     @Id
     private String id;
     private String name;
-    private String value;
+    private String code;
     private List<Category> subCategories;
 }

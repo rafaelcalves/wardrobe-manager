@@ -9,10 +9,10 @@ import org.mapstruct.ReportingPolicy;
 public interface PieceDtoMapper {
 
     @Mapping(target = "brandCode", source = "brand.code")
-    @Mapping(target = "categoryValue", source = "category.value")
+    @Mapping(target = "categoryCode", source = "category.code")
     PieceDto toDto(Piece piece);
 
     @Mapping(target = "brand.code", source = "brandCode")
-    @Mapping(target = "category.value", source = "categoryValue")
+    @Mapping(target = "category.code", source = "categoryCode")
     Piece toDomain(PieceDto pieceDto);
 }

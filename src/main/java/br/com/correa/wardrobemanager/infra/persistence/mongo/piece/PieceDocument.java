@@ -17,7 +17,7 @@ public class PieceDocument {
     private String description;
     private String brandCode;
     private String predominantColorHex;
-    private String categoryValue;
+    private String categoryCode;
     private String fabric;
     private List<URI> images;
     private List<URI> links;

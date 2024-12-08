@@ -1,11 +1,11 @@
 {
   "id": "object_id",
   "name": "category_name",
-  "value": "category_value",
+  "code": "category_code",
   "subCategories": [
     {
       "name": "subCategory_name",
-      "value": "subCategory_value",
+      "code": "subCategory_code",
       "subCategories": null
     }
   ]

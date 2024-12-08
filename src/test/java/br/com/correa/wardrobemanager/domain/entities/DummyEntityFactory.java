@@ -13,9 +13,9 @@ public final class DummyEntityFactory {
     public static final String PIECE_LINK_URL = "https://www.link.com";
 
     public static final String SUB_CATEGORY_NAME = "subCategory_name";
-    public static final String SUB_CATEGORY_VALUE = "subCategory_value";
+    public static final String SUB_CATEGORY_CODE = "subCategory_code";
     public static final String CATEGORY_NAME = "category_name";
-    public static final String CATEGORY_VALUE = "category_value";
+    public static final String CATEGORY_CODE = "category_code";
 
     public static final String BRAND_CODE = "brand_code";
     public static final String BRAND_NAME = "brand_name";
@@ -37,12 +37,12 @@ public final class DummyEntityFactory {
     public static Category buildDummyCategory() {
         Category subCategory = Category.builder()
                 .name(SUB_CATEGORY_NAME)
-                .value(SUB_CATEGORY_VALUE)
+                .code(SUB_CATEGORY_CODE)
                 .build();
 
         return Category.builder()
                 .name(CATEGORY_NAME)
-                .value(CATEGORY_VALUE)
+                .code(CATEGORY_CODE)
                 .subCategories(List.of(subCategory))
                 .build();
     }

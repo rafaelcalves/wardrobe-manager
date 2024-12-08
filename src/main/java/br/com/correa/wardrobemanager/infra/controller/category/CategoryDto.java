@@ -6,6 +6,6 @@ import java.util.List;
 
 public record CategoryDto(
         String name,
-        String value,
+        String code,
         List<Category>subCategories) {
 }

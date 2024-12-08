@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Category {
     private String name;
-    private String value;
+    private String code;
     private List<Category> subCategories;
 
     @Override
@@ -23,9 +23,9 @@ public class Category {
         return """
                 {
                     "name": "%s",
-                    "value": "%s",
+                    "code": "%s",
                     "subCategories": %s,
                     "class": "%s"
-                }""".formatted(this.name, this.value, subCategoriesString, this.getClass().getName());
+                }""".formatted(this.name, this.code, subCategoriesString, this.getClass().getName());
     }
 }
