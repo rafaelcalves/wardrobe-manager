@@ -1,0 +1,11 @@
+{
+  "name": "category_name",
+  "value": "category_value",
+  "subCategories": [
+    {
+      "name": "subCategory_name",
+      "value": "subCategory_value",
+      "subCategories": null
+    }
+  ]
+}

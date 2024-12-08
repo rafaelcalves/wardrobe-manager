@@ -8,7 +8,7 @@ public record PieceDto(
         String description,
         String brandCode,
         String predominantColorHex,
-        String categoryCode,
+        String categoryValue,
         String fabric,
         List<URI>images,
         List<URI> links) {

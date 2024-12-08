@@ -2,12 +2,14 @@ package br.com.correa.wardrobemanager.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @Builder
 @Jacksonized
 @AllArgsConstructor

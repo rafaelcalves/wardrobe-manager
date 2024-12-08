@@ -1,8 +1,7 @@
-package br.com.correa.wardrobemanager.usecases.brand;
+package br.com.correa.wardrobemanager.application.usecases.brand;
 
 import br.com.correa.wardrobemanager.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.application.gateways.BrandDSGateway;
-import br.com.correa.wardrobemanager.application.usecases.brand.BrandCreation;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;

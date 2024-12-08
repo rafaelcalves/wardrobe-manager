@@ -47,6 +47,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
+      - name: Setup Testcontainers Cloud Client
+        uses: atomicjar/testcontainers-cloud-setup-action@v1
+        with:
+          token: ${{ secrets.TC_CLOUD_TOKEN }}
+
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 

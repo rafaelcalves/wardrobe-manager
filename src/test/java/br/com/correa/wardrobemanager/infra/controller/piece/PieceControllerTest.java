@@ -1,12 +1,10 @@
-package br.com.correa.wardrobemanager.usecases.piece;
+package br.com.correa.wardrobemanager.infra.controller.piece;
 
 import br.com.correa.wardrobemanager.ObjectMapperConfig;
-import br.com.correa.wardrobemanager.application.gateways.PieceDSGateway;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceCreation;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
-import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,29 +12,33 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@TestWithResources
 @ExtendWith(MockitoExtension.class)
-class PieceCreationTest {
-    @Mock
-    private PieceDSGateway pieceDSGateway;
+class PieceControllerTest {
     @InjectMocks
+    private PieceController pieceController;
+
+    @Mock
     private PieceCreation pieceCreation;
+
+    @Spy
+    private PieceDtoMapper pieceDtoMapper = new PieceDtoMapperImpl();
 
     @WithJacksonMapper
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/piece.json")
     Piece piece;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/piece.json")
+    PieceDto pieceDto;
 
     @Test
-    void pieceCreationShouldReturnReceivedPieceAndCallGateway() {
-        Mockito.when(pieceDSGateway.createPiece(Mockito.any())).thenReturn(piece);
+    void shouldRedirectToUseCaseAsDomainValue() {
+        Mockito.when(pieceCreation.create(piece)).thenReturn(piece);
 
-        var result = pieceCreation.create(piece);
+        PieceDto result = pieceController.create(pieceDto);
 
-        Mockito.verify(pieceDSGateway).createPiece(piece);
-        Assertions.assertEquals(piece, result);
+        Assertions.assertEquals(pieceDto, result);
     }
 }
-
