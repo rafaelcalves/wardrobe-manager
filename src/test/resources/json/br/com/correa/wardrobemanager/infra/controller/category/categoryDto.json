@@ -1,0 +1,11 @@
+{
+  "name": "category_name",
+  "code": "category_code",
+  "subCategories": [
+    {
+      "name": "subCategory_name",
+      "code": "subCategory_code",
+      "subCategories": null
+    }
+  ]
+}

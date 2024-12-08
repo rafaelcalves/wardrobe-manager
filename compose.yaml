@@ -1,33 +1,44 @@
-version: '3.8'
-
 services:
-  app:
-    image: amazoncorretto:21
-    container_name: wadrobemanager_app
-    build:
-      context: .
-      dockerfile: Dockerfile
+  mongo:
+    image: mongo
+    restart: unless-stopped
     ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/wardrobemanager
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    depends_on:
-      - db
-
-  db:
-    image: postgres:15
-    container_name: postgres_db
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: wardrobemanager
+      - "27017:27017"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - wardrobemanager_mongodb:/data/db
+      - wardrobemanager_mongodb_log:/var/log/mongodb
+      - ./mongodb/initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - mongodb-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-pass}
+      MONGO_INITDB_DATABASE: wardrobemanagerdb
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    networks:
+      - mongodb-network
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER:-root}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD:-pass}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER:-root}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD:-pass}
+
+networks:
+  mongodb-network:
+    driver: bridge
 
 volumes:
-  postgres_data:
+  wardrobemanager_mongodb:
+    driver: local
+  wardrobemanager_mongodb_log:
+    driver: local

@@ -1,0 +1,6 @@
+{
+  "code": "brand_code",
+  "name": "brand_name",
+  "webSite": "https://www.brand.com",
+  "class": "br.com.correa.wardrobemanager.domain.entities.Brand"
+}

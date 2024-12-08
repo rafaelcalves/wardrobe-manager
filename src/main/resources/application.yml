@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: wardrobemanager
+  docker:
+    compose:
+      enabled: ${DOCKER_COMPOSE_ENABLED:false}
+  data:
+    mongodb:
+      uri: mongodb+srv://${MONGODB_USER:}:${MONGODB_PASSWORD}@${MONGODB_HOST}/wardrobemanagerdb
