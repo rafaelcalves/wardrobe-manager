@@ -7,7 +7,9 @@ import br.com.correa.wardrobemanager.infra.persistence.mongo.brand.BrandReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,11 +26,13 @@ public class BrandMongoGateway implements BrandDSGateway {
 
     @Override
     public Optional<Brand> getBrandByCode(String brandCode) {
-        return Optional.empty();
+        BrandDocument brandDocument = brandRepository.findByCode(brandCode).orElse(null);
+        return Optional.ofNullable(brandDocumentMapper.toDomain(brandDocument));
     }
 
     @Override
     public List<Brand> getAllBrands() {
-        return List.of();
+        List<BrandDocument> brandDocumentList = Objects.requireNonNullElse(brandRepository.findAll(), Collections.emptyList());
+        return brandDocumentMapper.toDomain(brandDocumentList);
     }
 }

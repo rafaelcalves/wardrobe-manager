@@ -1,6 +1,6 @@
 package br.com.correa.wardrobemanager.infra.gateways.mongo.category;
 
-import br.com.correa.wardrobemanager.ObjectMapperConfig;
+import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Category;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.category.CategoryDocument;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.category.CategoryRepository;

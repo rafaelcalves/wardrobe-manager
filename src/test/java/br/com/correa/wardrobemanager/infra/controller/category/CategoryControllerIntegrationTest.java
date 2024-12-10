@@ -1,9 +1,7 @@
 package br.com.correa.wardrobemanager.infra.controller.category;
 
-import br.com.correa.wardrobemanager.ObjectMapperConfig;
-import br.com.correa.wardrobemanager.domain.entities.Category;
+import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
@@ -37,9 +35,7 @@ class CategoryControllerIntegrationTest {
     static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
 
     @WithJacksonMapper
-    ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
-    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/category.json")
-    Category category;
+    ObjectMapper objectMapper = ObjectMapperConfig.getObjectMapper();
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto.json")
     String jsonInput;
 

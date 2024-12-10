@@ -18,6 +18,7 @@ public class CategoryController {
     @PostMapping
     public CategoryDto create(@RequestBody CategoryDto categoryDto) {
         Category domain = categoryDtoMapper.toDomain(categoryDto);
-        return categoryDtoMapper.toDto(categoryCreation.create(domain));
+        Category result = categoryCreation.create(domain);
+        return categoryDtoMapper.toDto(result);
     }
 }

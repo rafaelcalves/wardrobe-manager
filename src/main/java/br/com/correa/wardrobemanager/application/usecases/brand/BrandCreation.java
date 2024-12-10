@@ -16,7 +16,7 @@ public class BrandCreation {
     public Brand create(Brand brand) throws ElementCodeConflictException {
         try {
             brandSearch.getByCode(brand.getCode());
-            throw new ElementCodeConflictException("Code exists");
+            throw new ElementCodeConflictException("Brand code exists");
         } catch (ElementNotFoundException e) {
             return dsGateway.createBrand(brand);
         }

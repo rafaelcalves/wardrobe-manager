@@ -5,9 +5,7 @@
     {
       "name": "subCategory_name",
       "code": "subCategory_code",
-      "subCategories": null,
-      "class":"br.com.correa.wardrobemanager.domain.entities.Category"
+      "subCategories": null
     }
-  ],
-  "class": "br.com.correa.wardrobemanager.domain.entities.Category"
+  ]
 }

@@ -1,6 +1,6 @@
 package br.com.correa.wardrobemanager.infra.controller.piece;
 
-import br.com.correa.wardrobemanager.ObjectMapperConfig;
+import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;

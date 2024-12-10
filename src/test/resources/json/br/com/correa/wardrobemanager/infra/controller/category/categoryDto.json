@@ -4,8 +4,7 @@
   "subCategories": [
     {
       "name": "subCategory_name",
-      "code": "subCategory_code",
-      "subCategories": null
+      "code": "subCategory_code"
     }
   ]
 }

@@ -1,20 +1,24 @@
 [
   {
+    "id": "object_id",
     "code": "brand_code",
     "name": "brand_name",
     "webSite": "https://www.brand.com"
   },
   {
+    "id": "object_id1",
     "code": "brand_code1",
     "name": "brand_name1",
     "webSite": "https://www.brand1.com"
   },
   {
+    "id": "object_id2",
     "code": "brand_code2",
     "name": "brand_name2",
     "webSite": "https://www.brand2.com"
   },
   {
+    "id": "object_id3",
     "code": "brand3_code",
     "name": "brand3_name",
     "webSite": "https://www.brand3.com"
