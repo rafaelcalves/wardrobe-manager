@@ -1,5 +1,6 @@
 package br.com.correa.wardrobemanager.infra.controller.brand;
 
+import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandCreation;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class BrandController {
     private final BrandDtoMapper brandDtoMapper;
 
     @PostMapping
-    public BrandDto create(@RequestBody BrandDto brandDto) {
+    public BrandDto create(@RequestBody BrandDto brandDto) throws ElementCodeConflictException {
         Brand domain = brandDtoMapper.toDomain(brandDto);
         return brandDtoMapper.toDto(brandCreation.create(domain));
     }

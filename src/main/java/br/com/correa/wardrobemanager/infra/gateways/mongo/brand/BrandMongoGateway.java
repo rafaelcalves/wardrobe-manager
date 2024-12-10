@@ -7,6 +7,8 @@ import br.com.correa.wardrobemanager.infra.persistence.mongo.brand.BrandReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class BrandMongoGateway implements BrandDSGateway {
@@ -17,5 +19,10 @@ public class BrandMongoGateway implements BrandDSGateway {
     public Brand createBrand(Brand brand) {
         BrandDocument document = brandDocumentMapper.toDocument(brand);
         return brandDocumentMapper.toDomain(brandRepository.save(document));
+    }
+
+    @Override
+    public Optional<Brand> getBrandByCode(String brandCode) {
+        return Optional.empty();
     }
 }
