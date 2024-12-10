@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 @TestWithResources
@@ -32,6 +33,8 @@ class BrandSearchTest {
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/brand.json")
     Brand brand;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/brandList.json")
+    List<Brand> brandList;
 
     @Test
     void shouldReturnBrandMatchingTheCode() throws ElementNotFoundException {
@@ -43,9 +46,17 @@ class BrandSearchTest {
     }
 
     @Test
-    void shouldReturnExceptionIfBrandNotFound() throws ElementNotFoundException {
+    void shouldReturnExceptionIfBrandNotFound() {
         Mockito.when(brandDSGateway.getBrandByCode(BRAND_CODE)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ElementNotFoundException.class, () -> brandSearch.getByCode(BRAND_CODE));
+    }
+
+    @Test
+    void shouldReturnAllBrands() {
+        Mockito.when(brandDSGateway.getAllBrands()).thenReturn(brandList);
+
+        List<Brand> result = brandSearch.getAll();
+        Assertions.assertArrayEquals(brandList.toArray(), result.toArray());
     }
 }
