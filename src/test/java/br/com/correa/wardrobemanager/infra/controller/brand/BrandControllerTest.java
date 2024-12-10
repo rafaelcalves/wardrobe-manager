@@ -1,6 +1,7 @@
 package br.com.correa.wardrobemanager.infra.controller.brand;
 
 import br.com.correa.wardrobemanager.ObjectMapperConfig;
+import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandCreation;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +35,7 @@ class BrandControllerTest {
     BrandDto brandDto;
 
     @Test
-    void shouldRedirectToUseCaseAsDomainValue() {
+    void shouldRedirectToUseCaseAsDomainValue() throws ElementCodeConflictException {
         Mockito.when(brandCreation.create(brand)).thenReturn(brand);
 
         BrandDto result = brandController.create(brandDto);

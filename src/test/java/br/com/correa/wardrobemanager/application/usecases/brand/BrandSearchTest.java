@@ -1,7 +1,6 @@
 package br.com.correa.wardrobemanager.application.usecases.brand;
 
 import br.com.correa.wardrobemanager.ObjectMapperConfig;
-import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.gateways.BrandDSGateway;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
@@ -17,15 +16,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 @TestWithResources
 @ExtendWith(MockitoExtension.class)
-class BrandCreationTest {
+class BrandSearchTest {
+    public static final String BRAND_CODE = "brand_code";
     @InjectMocks
-    private BrandCreation brandCreation;
+    private BrandSearch brandSearch;
+
     @Mock
     private BrandDSGateway brandDSGateway;
-    @Mock
-    private BrandSearch brandSearch;
 
     @WithJacksonMapper
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
@@ -33,20 +34,18 @@ class BrandCreationTest {
     Brand brand;
 
     @Test
-    void brandCreationShouldReturnReceivedBrandAndCallGateway() throws ElementCodeConflictException, ElementNotFoundException {
-        Mockito.when(brandSearch.getByCode(Mockito.any())).thenThrow(ElementNotFoundException.class);
-        Mockito.when(brandDSGateway.createBrand(Mockito.any())).thenReturn(brand);
+    void shouldReturnBrandMatchingTheCode() throws ElementNotFoundException {
+        Mockito.when(brandDSGateway.getBrandByCode(BRAND_CODE)).thenReturn(Optional.of(brand));
 
-        var result = brandCreation.create(brand);
+        Brand result = brandSearch.getByCode(BRAND_CODE);
 
-        Mockito.verify(brandDSGateway).createBrand(brand);
         Assertions.assertEquals(brand, result);
     }
 
     @Test
-    void shouldThrowExceptionIfElementCodeExists() throws ElementNotFoundException {
-        Mockito.when(brandSearch.getByCode(Mockito.any())).thenReturn(brand);
+    void shouldReturnExceptionIfBrandNotFound() throws ElementNotFoundException {
+        Mockito.when(brandDSGateway.getBrandByCode(BRAND_CODE)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ElementCodeConflictException.class, () -> brandCreation.create(brand));
+        Assertions.assertThrows(ElementNotFoundException.class, () -> brandSearch.getByCode(BRAND_CODE));
     }
 }
