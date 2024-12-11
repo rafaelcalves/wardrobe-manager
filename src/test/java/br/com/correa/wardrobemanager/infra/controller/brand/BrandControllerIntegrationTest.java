@@ -47,6 +47,10 @@ class BrandControllerIntegrationTest {
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
     String brandDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/noCodeBrandDto.json")
+    String noCodeBrandDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/noNameBrandDto.json")
+    String noNameBrandDtoJson;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDtoList.json")
     List<BrandDto> brandDtoList;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDtoList.json")
@@ -55,6 +59,10 @@ class BrandControllerIntegrationTest {
     String codeExistsAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/not_found_exception.json")
     String notFoundAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/code_invalid_exception.json")
+    String codeInvalidAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/name_invalid_exception.json")
+    String nameInvalidAsProblemJson;
 
     @Test
     @Order(1)
@@ -83,6 +91,26 @@ class BrandControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(notFoundAsProblemJson));
+    }
+
+    @Test
+    @Order(4)
+    void shouldReceiveProblemDetailAsInvalidCodeErrorResponse() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(noCodeBrandDtoJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(codeInvalidAsProblemJson));
+    }
+
+    @Test
+    @Order(5)
+    void shouldReceiveProblemDetailAsInvalidNameErrorResponse() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(noNameBrandDtoJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(nameInvalidAsProblemJson));
     }
 
     private void assertBrandCreation(BrandDto brand) throws Exception {

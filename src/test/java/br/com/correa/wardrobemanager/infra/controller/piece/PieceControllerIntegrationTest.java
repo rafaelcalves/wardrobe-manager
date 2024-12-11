@@ -42,10 +42,16 @@ class PieceControllerIntegrationTest {
     Piece piece;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto.json")
     String jsonInput;
-
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
+    String brandDtoJson;
 
     @Test
     void shouldInsertPieceToDatabase() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoJson))
+                .andExpect(status().isOk());
+
         mockMvc.perform(post("/piece")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInput))
