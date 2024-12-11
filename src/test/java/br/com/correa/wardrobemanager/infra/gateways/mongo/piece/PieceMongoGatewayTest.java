@@ -1,6 +1,6 @@
 package br.com.correa.wardrobemanager.infra.gateways.mongo.piece;
 
-import br.com.correa.wardrobemanager.ObjectMapperConfig;
+import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.piece.PieceDocument;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.piece.PieceRepository;

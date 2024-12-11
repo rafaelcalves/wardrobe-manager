@@ -1,0 +1,22 @@
+[
+  {
+    "code": "brand_code",
+    "name": "brand_name",
+    "webSite": "https://www.brand.com"
+  },
+  {
+    "code": "brand_code1",
+    "name": "brand_name1",
+    "webSite": "https://www.brand1.com"
+  },
+  {
+    "code": "brand_code2",
+    "name": "brand_name2",
+    "webSite": "https://www.brand2.com"
+  },
+  {
+    "code": "brand3_code",
+    "name": "brand3_name",
+    "webSite": "https://www.brand3.com"
+  }
+]

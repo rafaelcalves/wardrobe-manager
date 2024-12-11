@@ -1,18 +1,31 @@
 package br.com.correa.wardrobemanager.infra.controller.piece;
 
+import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
+import br.com.correa.wardrobemanager.application.usecases.brand.BrandSearch;
+import br.com.correa.wardrobemanager.domain.entities.Brand;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface PieceDtoMapper {
+@Mapper(uses = BrandSearch.class, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+public abstract class PieceDtoMapper {
+    protected BrandSearch brandSearch;
+
+    @Autowired
+    public void setBrandSearch(BrandSearch brandSearch) {
+        this.brandSearch = brandSearch;
+    }
 
     @Mapping(target = "brandCode", source = "brand.code")
     @Mapping(target = "categoryCode", source = "category.code")
-    PieceDto toDto(Piece piece);
+    public abstract PieceDto toDto(Piece piece);
 
-    @Mapping(target = "brand.code", source = "brandCode")
+    @Mapping(target = "brand", source = "brandCode", qualifiedByName = "codeToBrand")
     @Mapping(target = "category.code", source = "categoryCode")
-    Piece toDomain(PieceDto pieceDto);
+    public abstract Piece toDomain(PieceDto pieceDto);
+
+    @Named("codeToBrand")
+    protected Brand map(String brandCode) throws ElementNotFoundException {
+        return brandSearch.getByCode(brandCode);
+    }
 }

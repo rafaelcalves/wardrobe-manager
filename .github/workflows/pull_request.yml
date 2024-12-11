@@ -1,8 +1,6 @@
 name: Pull Request / Push to Main Validation
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -24,7 +22,7 @@ jobs:
         id: commit-short
         uses: bhowell2/github-substring-action@1.0.2
         with:
-          value: ${{ github.event.after }}
+          value: ${{ github.event.pull_request.head.sha }}
           length_from_start: 7
 
       - name: Record docker image URL

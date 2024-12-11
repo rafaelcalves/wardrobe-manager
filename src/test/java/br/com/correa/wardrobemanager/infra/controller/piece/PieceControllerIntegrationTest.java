@@ -1,6 +1,6 @@
 package br.com.correa.wardrobemanager.infra.controller.piece;
 
-import br.com.correa.wardrobemanager.ObjectMapperConfig;
+import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
@@ -42,10 +42,16 @@ class PieceControllerIntegrationTest {
     Piece piece;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto.json")
     String jsonInput;
-
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
+    String brandDtoJson;
 
     @Test
     void shouldInsertPieceToDatabase() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoJson))
+                .andExpect(status().isOk());
+
         mockMvc.perform(post("/piece")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInput))

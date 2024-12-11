@@ -1,6 +1,9 @@
 spring:
   application:
     name: wardrobemanager
+  mvc:
+    problemdetails:
+      enabled: true
   docker:
     compose:
       enabled: ${DOCKER_COMPOSE_ENABLED:false}
