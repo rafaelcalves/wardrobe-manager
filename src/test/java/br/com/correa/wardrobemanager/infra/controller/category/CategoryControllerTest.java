@@ -1,5 +1,6 @@
 package br.com.correa.wardrobemanager.infra.controller.category;
 
+import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.usecases.category.CategoryCreation;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Category;
@@ -34,7 +35,7 @@ class CategoryControllerTest {
     CategoryDto categoryDto;
 
     @Test
-    void shouldRedirectToUseCaseAsDomainValue() {
+    void shouldRedirectToUseCaseAsDomainValue() throws ElementCodeConflictException {
         Mockito.when(categoryCreation.create(category)).thenReturn(category);
 
         CategoryDto result = categoryController.create(categoryDto);

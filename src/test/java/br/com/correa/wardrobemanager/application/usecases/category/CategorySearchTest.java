@@ -1,6 +1,5 @@
 package br.com.correa.wardrobemanager.application.usecases.category;
 
-import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.gateways.CategoryDSGateway;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
@@ -17,36 +16,47 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.Optional;
+
 @TestWithResources
 @ExtendWith(MockitoExtension.class)
-class CategoryCreationTest {
+public class CategorySearchTest {
+    public static final String CATEGORY_CODE = "category_code";
+    
+    @InjectMocks
+    private CategorySearch categorySearch;
     @Mock
     private CategoryDSGateway categoryDSGateway;
-    @InjectMocks
-    private CategoryCreation categoryCreation;
-    @Mock
-    private CategorySearch categorySearch;
 
     @WithJacksonMapper
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/category.json")
     Category category;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/categoryList.json")
+    List<Category> categoryList;
 
     @Test
-    void categoryCreationShouldReturnReceivedCategoryAndCallGateway() throws ElementCodeConflictException, ElementNotFoundException {
-        Mockito.when(categorySearch.getByCode(Mockito.any())).thenThrow(ElementNotFoundException.class);
-        Mockito.when(categoryDSGateway.createCategory(Mockito.any())).thenReturn(category);
+    void shouldReturnCategoryMatchingTheCode() throws ElementNotFoundException {
+        Mockito.when(categoryDSGateway.getCategoryByCode(CATEGORY_CODE)).thenReturn(Optional.of(category));
 
-        var result = categoryCreation.create(category);
+        Category result = categorySearch.getByCode(CATEGORY_CODE);
 
-        Mockito.verify(categoryDSGateway).createCategory(category);
         Assertions.assertEquals(category, result);
     }
 
     @Test
-    void shouldThrowExceptionIfElementCodeExists() throws ElementNotFoundException {
-        Mockito.when(categorySearch.getByCode(Mockito.any())).thenReturn(category);
+    void shouldReturnExceptionIfCategoryNotFound() {
+        Mockito.when(categoryDSGateway.getCategoryByCode(CATEGORY_CODE)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ElementCodeConflictException.class, () -> categoryCreation.create(category));
+        Assertions.assertThrows(ElementNotFoundException.class, () -> categorySearch.getByCode(CATEGORY_CODE));
+    }
+
+    @Test
+    void shouldReturnAllCategorys() {
+        Mockito.when(categoryDSGateway.getAllCategories()).thenReturn(categoryList);
+
+        List<Category> result = categorySearch.getAll();
+        Assertions.assertArrayEquals(categoryList.toArray(), result.toArray());
     }
 }

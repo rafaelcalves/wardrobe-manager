@@ -1,6 +1,6 @@
 package br.com.correa.wardrobemanager.domain.entities;
 
-import br.com.correa.wardrobemanager.domain.exceptions.ElementAttributeInvalidException;
+import br.com.correa.wardrobemanager.domain.exceptions.InvalidEntityAttributeException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,7 +30,7 @@ public class BrandTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("getValidationArguments")
     void shouldThrowExceptionWhenInvalidAttribute(String description, String code, String name, String url) {
-        Assertions.assertThrows(ElementAttributeInvalidException.class, () -> Brand.builder()
+        Assertions.assertThrows(InvalidEntityAttributeException.class, () -> Brand.builder()
                 .code(code)
                 .name(name)
                 .webSite(URI.create(url))

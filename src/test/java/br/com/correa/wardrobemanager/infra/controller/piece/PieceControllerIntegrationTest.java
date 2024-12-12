@@ -41,9 +41,11 @@ class PieceControllerIntegrationTest {
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/piece.json")
     Piece piece;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto.json")
-    String jsonInput;
+    String pieceDtoJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
     String brandDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto.json")
+    String categoryDtoJson;
 
     @Test
     void shouldInsertPieceToDatabase() throws Exception {
@@ -52,10 +54,15 @@ class PieceControllerIntegrationTest {
                         .content(brandDtoJson))
                 .andExpect(status().isOk());
 
+        mockMvc.perform(post("/category")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryDtoJson))
+                .andExpect(status().isOk());
+
         mockMvc.perform(post("/piece")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonInput))
+                        .content(pieceDtoJson))
                 .andExpect(status().isOk())
-                .andExpect(content().json(jsonInput));
+                .andExpect(content().json(pieceDtoJson));
     }
 }

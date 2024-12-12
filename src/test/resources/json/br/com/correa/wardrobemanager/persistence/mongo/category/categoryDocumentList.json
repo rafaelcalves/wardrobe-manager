@@ -1,0 +1,44 @@
+[
+  {
+    "id": "object_id1",
+    "name": "category_name1",
+    "code": "category_code1",
+    "subCategories": [
+      {
+        "name": "subCategory_name1.1",
+        "code": "subCategory_code1.1"
+      },
+      {
+        "name": "subCategory_name1.2",
+        "code": "subCategory_code1.2"
+      }
+    ]
+  },
+  {
+    "id": "object_id2",
+    "name": "category_name2",
+    "code": "category_code2"
+  },
+  {
+    "id": "object_id3",
+    "name": "category_name3",
+    "code": "category_code3",
+    "subCategories": [
+      {
+        "name": "subCategory_name3.1",
+        "code": "subCategory_code3.1"
+      }
+    ]
+  },
+  {
+    "id": "object_id",
+    "name": "category_name4",
+    "code": "category_code4",
+    "subCategories": [
+      {
+        "name": "subCategory_name4.1",
+        "code": "subCategory_code4.1"
+      }
+    ]
+  }
+]

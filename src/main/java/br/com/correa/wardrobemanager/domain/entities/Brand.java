@@ -1,6 +1,6 @@
 package br.com.correa.wardrobemanager.domain.entities;
 
-import br.com.correa.wardrobemanager.domain.exceptions.ElementAttributeInvalidException;
+import br.com.correa.wardrobemanager.domain.exceptions.InvalidEntityAttributeException;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class Brand {
                 Validate.notBlank(super.code, "Brand code cannot be blank");
                 Validate.notBlank(super.name, "Brand name cannot be blank");
             } catch (NullPointerException|IllegalArgumentException e) {
-                throw new ElementAttributeInvalidException(e.getMessage());
+                throw new InvalidEntityAttributeException(e.getMessage());
             }
 
             return super.build();
