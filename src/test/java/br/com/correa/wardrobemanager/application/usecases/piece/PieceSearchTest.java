@@ -1,6 +1,5 @@
 package br.com.correa.wardrobemanager.application.usecases.piece;
 
-import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.gateways.PieceDSGateway;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
@@ -17,38 +16,47 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.Optional;
+
 @TestWithResources
 @ExtendWith(MockitoExtension.class)
-class PieceCreationTest {
+class PieceSearchTest {
+    public static final String PIECE_CODE = "piece_code";
     @InjectMocks
-    private PieceCreation pieceCreation;
+    private PieceSearch pieceSearch;
 
     @Mock
     private PieceDSGateway pieceDSGateway;
-    @Mock
-    private PieceSearch pieceSearch;
 
     @WithJacksonMapper
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/piece.json")
     Piece piece;
-    
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/pieceList.json")
+    List<Piece> pieceList;
+
     @Test
-    void pieceCreationShouldReturnReceivedPieceAndCallGateway() throws ElementCodeConflictException, ElementNotFoundException {
-        Mockito.when(pieceSearch.getByCode(Mockito.any())).thenThrow(ElementNotFoundException.class);
-        Mockito.when(pieceDSGateway.createPiece(Mockito.any())).thenReturn(piece);
+    void shouldReturnPieceMatchingTheCode() throws ElementNotFoundException {
+        Mockito.when(pieceDSGateway.getPieceByCode(PIECE_CODE)).thenReturn(Optional.of(piece));
 
-        var result = pieceCreation.create(piece);
+        Piece result = pieceSearch.getByCode(PIECE_CODE);
 
-        Mockito.verify(pieceDSGateway).createPiece(piece);
         Assertions.assertEquals(piece, result);
     }
 
     @Test
-    void shouldThrowExceptionIfElementCodeExists() throws ElementNotFoundException {
-        Mockito.when(pieceSearch.getByCode(Mockito.any())).thenReturn(piece);
+    void shouldReturnExceptionIfPieceNotFound() {
+        Mockito.when(pieceDSGateway.getPieceByCode(PIECE_CODE)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ElementCodeConflictException.class, () -> pieceCreation.create(piece));
+        Assertions.assertThrows(ElementNotFoundException.class, () -> pieceSearch.getByCode(PIECE_CODE));
+    }
+
+    @Test
+    void shouldReturnAllPieces() {
+        Mockito.when(pieceDSGateway.getAllPieces()).thenReturn(pieceList);
+
+        List<Piece> result = pieceSearch.getAll();
+        Assertions.assertArrayEquals(pieceList.toArray(), result.toArray());
     }
 }
-

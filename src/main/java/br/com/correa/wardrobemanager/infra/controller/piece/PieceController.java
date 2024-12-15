@@ -1,23 +1,37 @@
 package br.com.correa.wardrobemanager.infra.controller.piece;
 
+import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
+import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceCreation;
+import br.com.correa.wardrobemanager.application.usecases.piece.PieceSearch;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/piece")
 @RequiredArgsConstructor
 public class PieceController {
     private final PieceDtoMapper pieceDtoMapper;
+
     private final PieceCreation pieceCreation;
+    private final PieceSearch pieceSearch;
 
     @PostMapping
-    public PieceDto create(@RequestBody PieceDto pieceDto) {
+    public PieceDto create(@RequestBody PieceDto pieceDto) throws ElementCodeConflictException {
         Piece domain = pieceDtoMapper.toDomain(pieceDto);
         return pieceDtoMapper.toDto(pieceCreation.create(domain));
+    }
+
+    @GetMapping("/{code}")
+    public PieceDto getByCode(@PathVariable String code) throws ElementNotFoundException {
+        return pieceDtoMapper.toDto(pieceSearch.getByCode(code));
+    }
+
+    @GetMapping
+    public List<PieceDto> getAll() {
+        return pieceDtoMapper.toDto(pieceSearch.getAll());
     }
 }

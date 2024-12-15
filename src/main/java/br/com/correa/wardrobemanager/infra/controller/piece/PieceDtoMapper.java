@@ -9,6 +9,8 @@ import br.com.correa.wardrobemanager.domain.entities.Piece;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class PieceDtoMapper {
     protected BrandSearch brandSearch;
@@ -27,6 +29,7 @@ public abstract class PieceDtoMapper {
     @Mapping(target = "brandCode", source = "brand.code")
     @Mapping(target = "categoryCode", source = "category.code")
     public abstract PieceDto toDto(Piece piece);
+    public abstract List<PieceDto> toDto(List<Piece> pieceList);
 
     @Mapping(target = "brand", source = "brandCode", qualifiedByName = "codeToBrand")
     @Mapping(target = "category", source = "categoryCode", qualifiedByName = "codeToCategory")

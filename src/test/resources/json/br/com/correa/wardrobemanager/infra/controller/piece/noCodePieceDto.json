@@ -1,15 +1,8 @@
 {
-  "code": "piece_code",
   "description": "piece_description",
-  "brand": {
-    "code": "brand_code",
-    "name": "brand_name"
-  },
+  "brandCode": "brand_code",
   "predominantColorHex": "#FFFFFF",
-  "category": {
-    "name": "category_name",
-    "code": "category_code"
-  },
+  "categoryCode": "category_code",
   "fabric": "piece_fabric",
   "images": [
     "https://www.image.com"

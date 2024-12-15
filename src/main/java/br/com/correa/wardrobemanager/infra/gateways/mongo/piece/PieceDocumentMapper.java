@@ -10,6 +10,8 @@ import br.com.correa.wardrobemanager.infra.persistence.mongo.piece.PieceDocument
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class PieceDocumentMapper {
     protected BrandSearch brandSearch;
@@ -32,6 +34,7 @@ public abstract class PieceDocumentMapper {
     @Mapping(target = "brand", source = "brandCode", qualifiedByName = "codeToBrand")
     @Mapping(target = "category", source = "categoryCode", qualifiedByName = "codeToCategory")
     abstract Piece toDomain(PieceDocument pieceDocument);
+    abstract List<Piece> toDomain(List<PieceDocument> pieceDocumentList);
 
     @Named("codeToBrand")
     protected Brand mapBrand(String brandCode) throws ElementNotFoundException {

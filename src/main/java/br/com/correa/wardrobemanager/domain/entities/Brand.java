@@ -38,5 +38,4 @@ public class Brand {
             return super.build();
         }
     }
-
 }
