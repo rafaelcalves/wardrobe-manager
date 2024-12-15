@@ -1,24 +1,14 @@
 {
+  "code": "piece_code",
   "description": "piece_description",
   "brand": {
     "code": "brand_code",
-    "name": "brand_name",
-    "webSite": "https://www.brand.com",
-    "class": "br.com.correa.wardrobemanager.domain.entities.Brand"
+    "name": "brand_name"
   },
   "predominantColorHex": "#FFFFFF",
   "category": {
     "name": "category_name",
-    "code": "category_code",
-    "subCategories": [
-      {
-        "name": "subCategory_name",
-        "code": "subCategory_code",
-        "subCategories": null,
-        "class":"br.com.correa.wardrobemanager.domain.entities.Category"
-      }
-    ],
-    "class": "br.com.correa.wardrobemanager.domain.entities.Category"
+    "code": "category_code"
   },
   "fabric": "piece_fabric",
   "images": [
@@ -26,6 +16,5 @@
   ],
   "links": [
     "https://www.link.com"
-  ],
-  "class": "br.com.correa.wardrobemanager.domain.entities.Piece"
+  ]
 }

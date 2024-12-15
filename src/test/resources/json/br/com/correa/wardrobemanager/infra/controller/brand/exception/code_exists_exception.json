@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "title": "Conflict",
+  "status": 409,
+  "detail": "Brand code exists",
+  "instance": "/brand"
+}

@@ -1,18 +1,18 @@
 package br.com.correa.wardrobemanager.domain.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import br.com.correa.wardrobemanager.domain.exceptions.InvalidEntityAttributeException;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.Validate;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
+@ToString
 @Jacksonized
-@AllArgsConstructor
+@EqualsAndHashCode
 public class Piece {
     private String code;
     private String description;
@@ -23,26 +23,27 @@ public class Piece {
     private List<URI> images;
     private List<URI> links;
 
-    @Override
-    public String toString() {
-        return """
-                {
-                    "code": "%s",
-                    "description": "%s",
-                    "brand": %s,
-                    "predominantColorHex":"%s",
-                    "category": %s,
-                    "fabric": "%s",
-                    "images": %s,
-                    "links": %s,
-                    "class": "%s"
-                }""".formatted(this.code, this.description, this.brand, this.predominantColorHex, this.category,
-                this.fabric, printList(this.images), printList(this.links), this.getClass().getName());
+    public static Piece.PieceBuilder builder() {
+        return new Piece.CustomPieceBuilder();
     }
 
-    private String printList(List<?> list) {
-        return "[" + list.stream()
-                .map(element -> "\"" + element.toString() + "\"")
-                .collect(Collectors.joining(",")) + "]";
+    private static class CustomPieceBuilder extends Piece.PieceBuilder {
+
+        @Override
+        public Piece build() {
+            try {
+                Validate.notBlank(super.code, "Piece code cannot be blank");
+                Validate.notBlank(super.description, "Piece description cannot be blank");
+                Validate.notBlank(super.predominantColorHex, "Piece predominant color hex cannot be blank");
+                Validate.notNull(super.category, "Piece category cannot be null");
+                Validate.notEmpty(super.images, "Piece should have at least one image");
+                Validate.noNullElements(super.images, "Piece image cannot be null. Index %d is null");
+                Validate.noNullElements(super.links, "Piece link cannot be null. Index %d is null");
+            } catch (NullPointerException|IllegalArgumentException e) {
+                throw new InvalidEntityAttributeException(e.getMessage());
+            }
+
+            return super.build();
+        }
     }
 }

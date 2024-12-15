@@ -7,6 +7,11 @@ import br.com.correa.wardrobemanager.infra.persistence.mongo.piece.PieceReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PieceMongoGateway implements PieceDSGateway {
@@ -17,5 +22,17 @@ public class PieceMongoGateway implements PieceDSGateway {
     public Piece createPiece(Piece piece) {
         PieceDocument document = pieceDocumentMapper.toDocument(piece);
         return pieceDocumentMapper.toDomain(pieceRepository.save(document));
+    }
+
+    @Override
+    public Optional<Piece> getPieceByCode(String pieceCode) {
+        PieceDocument pieceDocument = pieceRepository.findByCode(pieceCode).orElse(null);
+        return Optional.ofNullable(pieceDocumentMapper.toDomain(pieceDocument));
+    }
+
+    @Override
+    public List<Piece> getAllPieces() {
+        List<PieceDocument> pieceDocumentList = Objects.requireNonNullElse(pieceRepository.findAll(), Collections.emptyList());
+        return pieceDocumentMapper.toDomain(pieceDocumentList);
     }
 }

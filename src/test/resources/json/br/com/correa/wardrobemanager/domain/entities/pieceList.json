@@ -1,0 +1,62 @@
+[
+  {
+    "code": "piece_code",
+    "description": "piece_description",
+    "brand": {
+      "code": "brand_code",
+      "name": "brand_name"
+    },
+    "predominantColorHex": "#FFFFFF",
+    "category": {
+      "name": "category_name",
+      "code": "category_code"
+    },
+    "fabric": "piece_fabric",
+    "images": [
+      "https://www.image.com"
+    ],
+    "links": [
+      "https://www.link.com"
+    ]
+  },
+  {
+    "code": "piece_code1",
+    "description": "piece_description1",
+    "brand": {
+      "code": "brand_code",
+      "name": "brand_name"
+    },
+    "predominantColorHex": "#FFFFFF",
+    "category": {
+      "name": "category_name",
+      "code": "category_code"
+    },
+    "fabric": "piece_fabric",
+    "images": [
+      "https://www.image.com"
+    ],
+    "links": [
+      "https://www.link.com"
+    ]
+  },
+  {
+    "code": "piece_code2",
+    "description": "piece_description2",
+    "brand": {
+      "code": "brand_code",
+      "name": "brand_name"
+    },
+    "predominantColorHex": "#FFFFFF",
+    "category": {
+      "name": "category_name",
+      "code": "category_code"
+    },
+    "fabric": "piece_fabric",
+    "images": [
+      "https://www.image.com"
+    ],
+    "links": [
+      "https://www.link.com"
+    ]
+  }
+]

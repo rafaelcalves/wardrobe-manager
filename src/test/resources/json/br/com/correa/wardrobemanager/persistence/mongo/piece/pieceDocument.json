@@ -1,5 +1,6 @@
 {
   "id": "object_id",
+  "code": "piece_code",
   "description": "piece_description",
   "brandCode": "brand_code",
   "predominantColorHex": "#FFFFFF",
