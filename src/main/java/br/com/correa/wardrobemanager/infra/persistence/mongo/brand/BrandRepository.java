@@ -5,5 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface BrandRepository extends MongoRepository<BrandDocument, String> {
-    public Optional<BrandDocument> findByCode(String code);
+    Optional<BrandDocument> findByCode(String code);
+    Optional<BrandDocument> deleteByCode(String code);
 }

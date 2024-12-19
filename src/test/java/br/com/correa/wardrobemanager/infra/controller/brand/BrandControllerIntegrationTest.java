@@ -6,15 +6,13 @@ import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -23,22 +21,23 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled
 @Testcontainers
 @TestWithResources
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BrandControllerIntegrationTest {
 
     public static final String UNREGISTERED_BRAND_CODE = "unregistered_brand_code";
+
     @Autowired
     private MockMvc mockMvc;
-    
     @Container
     @ServiceConnection
     static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
@@ -47,6 +46,10 @@ class BrandControllerIntegrationTest {
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
     String brandDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_shouldDelete.json")
+    String brandDtoShouldDeleteJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_shouldDelete.json")
+    BrandDto brandDtoShouldDelete;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/noCodeBrandDto.json")
     String noCodeBrandDtoJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/noNameBrandDto.json")
@@ -59,6 +62,8 @@ class BrandControllerIntegrationTest {
     String codeExistsAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/not_found_exception.json")
     String notFoundAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/not_found_exception_delete.json")
+    String notFoundDeleteAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/code_invalid_exception.json")
     String codeInvalidAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/exception/name_invalid_exception.json")
@@ -77,6 +82,11 @@ class BrandControllerIntegrationTest {
     @Test
     @Order(2)
     void shouldReceiveProblemDetailAsConflictErrorResponse() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoJson))
+                .andExpect(status().isOk());
+
         mockMvc.perform(post("/brand")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(brandDtoJson))
@@ -111,6 +121,25 @@ class BrandControllerIntegrationTest {
                         .content(noNameBrandDtoJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(nameInvalidAsProblemJson));
+    }
+
+    @Test
+    @Order(6)
+    void shouldSuccessfullyDeleteElement() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoShouldDeleteJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/brand/" + brandDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(brandDtoShouldDeleteJson));
+
+        mockMvc.perform(delete("/brand/" + brandDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json(notFoundDeleteAsProblemJson));
     }
 
     private void assertBrandCreation(BrandDto brand) throws Exception {

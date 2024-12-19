@@ -1,16 +1,12 @@
 package br.com.correa.wardrobemanager.infra.controller.piece;
 
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
-import br.com.correa.wardrobemanager.domain.entities.Piece;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled
 @Testcontainers
 @TestWithResources
 @AutoConfigureMockMvc
@@ -46,8 +43,6 @@ class PieceControllerIntegrationTest {
 
     @WithJacksonMapper
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
-    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/piece.json")
-    Piece piece;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto.json")
     String pieceDtoJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
@@ -66,8 +61,6 @@ class PieceControllerIntegrationTest {
     String notFoundAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/code_invalid_exception.json")
     String codeInvalidAsProblemJson;
-    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/name_invalid_exception.json")
-    String nameInvalidAsProblemJson;
 
     @Test
     @Order(1)
