@@ -1,0 +1,10 @@
+{
+  "name": "category_name_del",
+  "code": "category_code_del",
+  "subCategories": [
+    {
+      "name": "subCategory_name",
+      "code": "subCategory_code"
+    }
+  ]
+}

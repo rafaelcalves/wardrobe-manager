@@ -6,7 +6,10 @@ import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,12 +23,10 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @Testcontainers
 @TestWithResources
 @AutoConfigureMockMvc
@@ -61,6 +62,12 @@ class PieceControllerIntegrationTest {
     String notFoundAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/code_invalid_exception.json")
     String codeInvalidAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/not_found_exception_delete.json")
+    String notFoundDeleteAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_shouldDelete.json")
+    String pieceDtoShouldDeleteJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_shouldDelete.json")
+    PieceDto pieceDtoShouldDelete;
 
     @Test
     @Order(1)
@@ -109,6 +116,25 @@ class PieceControllerIntegrationTest {
                         .content(noCodePieceDtoJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(codeInvalidAsProblemJson));
+    }
+
+    @Test
+    @Order(5)
+    void shouldSuccessfullyDeleteElement() throws Exception {
+        mockMvc.perform(post("/piece")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pieceDtoShouldDeleteJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/piece/" + pieceDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(pieceDtoShouldDeleteJson));
+
+        mockMvc.perform(delete("/piece/" + pieceDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json(notFoundDeleteAsProblemJson));
     }
 
     private void assertPieceCreation(PieceDto piece) throws Exception {

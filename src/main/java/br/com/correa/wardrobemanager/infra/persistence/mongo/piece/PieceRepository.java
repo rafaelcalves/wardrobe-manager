@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface PieceRepository extends MongoRepository<PieceDocument, String> {
     Optional<PieceDocument> findByCode(String code);
+    Optional<PieceDocument> deleteByCode(String code);
 }

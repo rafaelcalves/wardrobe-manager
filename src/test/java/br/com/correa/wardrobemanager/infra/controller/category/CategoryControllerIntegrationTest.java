@@ -6,7 +6,6 @@ import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +21,10 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @Testcontainers
 @TestWithResources
 @AutoConfigureMockMvc
@@ -64,6 +61,12 @@ class CategoryControllerIntegrationTest {
     String codeInvalidAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/exception/name_invalid_exception.json")
     String nameInvalidAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/exception/not_found_exception_delete.json")
+    String notFoundDeleteAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto_shouldDelete.json")
+    String categoryDtoShouldDeleteJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto_shouldDelete.json")
+    CategoryDto categoryDtoShouldDelete;
 
     @Test
     @Order(1)
@@ -122,6 +125,25 @@ class CategoryControllerIntegrationTest {
                         .content(noCodeSubCategorycategoryDtoJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(codeInvalidAsProblemJson));
+    }
+
+    @Test
+    @Order(7)
+    void shouldSuccessfullyDeleteElement() throws Exception {
+        mockMvc.perform(post("/category")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryDtoShouldDeleteJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/category/" + categoryDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(categoryDtoShouldDeleteJson));
+
+        mockMvc.perform(delete("/category/" + categoryDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json(notFoundDeleteAsProblemJson));
     }
 
     private void assertCategoryCreation(CategoryDto category) throws Exception {
