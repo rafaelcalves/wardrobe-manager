@@ -6,10 +6,7 @@ import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 import io.hosuaby.inject.resources.junit.jupiter.WithJacksonMapper;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PieceControllerIntegrationTest {
 
     public static final String UNREGISTERED_PIECE_CODE = "unregistered_piece_code";
+    public static final String BRAND_CODE = "brand_code";
+    public static final String CATEGORY_CODE = "category_code";
     @Autowired
     private MockMvc mockMvc;
     
@@ -46,10 +45,20 @@ class PieceControllerIntegrationTest {
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto.json")
     String pieceDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_old.json")
+    String pieceDtoOldJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_new.json")
+    String pieceDtoNewJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_old.json")
+    PieceDto pieceDtoOld;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
     String brandDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_old.json")
+    String brandDtoOldJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto.json")
     String categoryDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto_old.json")
+    String categoryDtoOldJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/noCodePieceDto.json")
     String noCodePieceDtoJson;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDtoList.json")
@@ -69,9 +78,8 @@ class PieceControllerIntegrationTest {
     @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_shouldDelete.json")
     PieceDto pieceDtoShouldDelete;
 
-    @Test
-    @Order(1)
-    void shouldInsertPieceToDatabase() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         mockMvc.perform(post("/brand")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(brandDtoJson))
@@ -81,7 +89,22 @@ class PieceControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(categoryDtoJson))
                 .andExpect(status().isOk());
+    }
 
+    @AfterEach
+    void tearDown() throws Exception {
+        mockMvc.perform(delete("/brand/" + BRAND_CODE)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/category/" + CATEGORY_CODE)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(1)
+    void shouldInsertPieceToDatabase() throws Exception {
         for (PieceDto pieceDto : pieceDtoList) {
             assertPieceCreation(pieceDto);
         }
@@ -135,6 +158,31 @@ class PieceControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(notFoundDeleteAsProblemJson));
+    }
+
+    @Test
+    @Order(6)
+    void shouldSuccessfullyEditElement() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoOldJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/category")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryDtoOldJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/piece")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pieceDtoOldJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/piece/" + pieceDtoOld.code())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pieceDtoNewJson))
+                .andExpect(status().isOk())
+                .andExpect(content().json(pieceDtoNewJson));
     }
 
     private void assertPieceCreation(PieceDto piece) throws Exception {

@@ -4,6 +4,7 @@ import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictE
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceCreation;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceDeletion;
+import br.com.correa.wardrobemanager.application.usecases.piece.PieceEdition;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceSearch;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class PieceController {
     private final PieceCreation pieceCreation;
     private final PieceSearch pieceSearch;
     private final PieceDeletion pieceDeletion;
+    private final PieceEdition pieceEdition;
 
     @PostMapping
     public PieceDto create(@RequestBody PieceDto pieceDto) throws ElementCodeConflictException {
@@ -40,5 +42,11 @@ public class PieceController {
     @DeleteMapping("/{code}")
     public PieceDto delete(@PathVariable String code) throws ElementNotFoundException {
         return pieceDtoMapper.toDto(pieceDeletion.delete(code));
+    }
+
+    @PutMapping("/{code}")
+    public PieceDto edit(@PathVariable String code, @RequestBody PieceDto pieceDto) throws ElementNotFoundException {
+        Piece domain = pieceDtoMapper.toDomain(pieceDto);
+        return pieceDtoMapper.toDto(pieceEdition.edit(code, domain));
     }
 }

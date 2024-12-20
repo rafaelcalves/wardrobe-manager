@@ -20,8 +20,16 @@ public class PieceMongoGateway implements PieceDSGateway {
 
     @Override
     public Optional<Piece> deletePiece(String pieceCode) {
-        PieceDocument pieceDocument = pieceRepository.deleteByCode(pieceCode).orElse(null);
-        return Optional.ofNullable(pieceDocumentMapper.toDomain(pieceDocument));
+        Optional<PieceDocument> pieceDocument = pieceRepository.deleteByCode(pieceCode);
+        return pieceDocument.map(pieceDocumentMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Piece> editPiece(String pieceCode, Piece piece) {
+        Optional<PieceDocument> pieceDocument = pieceRepository.findByCode(pieceCode);
+        if(pieceDocument.isEmpty()) return Optional.empty();
+        PieceDocument document = pieceDocumentMapper.toDocument(pieceDocument.get(), piece);
+        return Optional.of(pieceDocumentMapper.toDomain(pieceRepository.save(document)));
     }
 
     @Override
@@ -32,8 +40,8 @@ public class PieceMongoGateway implements PieceDSGateway {
 
     @Override
     public Optional<Piece> getPieceByCode(String pieceCode) {
-        PieceDocument pieceDocument = pieceRepository.findByCode(pieceCode).orElse(null);
-        return Optional.ofNullable(pieceDocumentMapper.toDomain(pieceDocument));
+        Optional<PieceDocument> pieceDocument = pieceRepository.findByCode(pieceCode);
+        return pieceDocument.map(pieceDocumentMapper::toDomain);
     }
 
     @Override

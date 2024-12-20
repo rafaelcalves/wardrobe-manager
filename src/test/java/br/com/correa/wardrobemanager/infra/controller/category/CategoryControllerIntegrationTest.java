@@ -43,6 +43,12 @@ class CategoryControllerIntegrationTest {
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto.json")
     String categoryDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto_old.json")
+    String categoryDtoOldJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto_new.json")
+    String categoryDtoNewJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/category/categoryDto_old.json")
+    CategoryDto categoryDtoOld;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/noCodeCategoryDto.json")
     String noCodeCategoryDtoJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/category/noCodeSubCategorycategoryDto.json")
@@ -144,6 +150,21 @@ class CategoryControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(notFoundDeleteAsProblemJson));
+    }
+    
+    @Test
+    @Order(8)
+    void shouldSuccessfullyEditElement() throws Exception {
+        mockMvc.perform(post("/category")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryDtoOldJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/category/" + categoryDtoOld.code())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(categoryDtoNewJson))
+                .andExpect(status().isOk())
+                .andExpect(content().json(categoryDtoNewJson));
     }
 
     private void assertCategoryCreation(CategoryDto category) throws Exception {

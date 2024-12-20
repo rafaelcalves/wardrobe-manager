@@ -4,6 +4,7 @@ import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictE
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandCreation;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandDeletion;
+import br.com.correa.wardrobemanager.application.usecases.brand.BrandEdition;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandSearch;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ public class BrandController {
     private final BrandCreation brandCreation;
     private final BrandSearch brandSearch;
     private final BrandDeletion brandDeletion;
+    private final BrandEdition brandEdition;
+
     private final BrandDtoMapper brandDtoMapper;
 
     @PostMapping
@@ -39,5 +42,11 @@ public class BrandController {
     @DeleteMapping("/{code}")
     public BrandDto delete(@PathVariable String code) throws ElementNotFoundException {
         return brandDtoMapper.toDto(brandDeletion.delete(code));
+    }
+
+    @PutMapping("/{code}")
+    public BrandDto edit(@PathVariable String code, @RequestBody BrandDto brandDto) throws ElementNotFoundException {
+        Brand domain = brandDtoMapper.toDomain(brandDto);
+        return brandDtoMapper.toDto(brandEdition.edit(code, domain));
     }
 }

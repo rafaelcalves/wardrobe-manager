@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface BrandDSGateway {
     Optional<Brand> deleteBrand(String brandCode);
+    Optional<Brand> editBrand(String brandCode, Brand brand);
     Brand createBrand(Brand brand);
     Optional<Brand> getBrandByCode(String brandCode);
     List<Brand> getAllBrands();

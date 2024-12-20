@@ -1,5 +1,6 @@
 package br.com.correa.wardrobemanager.infra.gateways.mongo.brand;
 
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.brand.BrandDocument;
@@ -40,6 +41,8 @@ class BrandMongoGatewayTest {
     BrandDocument brandDocumentInput;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/brand/brandDocument.json")
     BrandDocument brandDocumentOutput;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/brand/brandDocument_old.json")
+    BrandDocument brandDocumentOutputOld;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/brand/brandDocumentList.json")
     List<BrandDocument> brandDocumentList;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/brandList.json")
@@ -102,5 +105,29 @@ class BrandMongoGatewayTest {
         Optional<Brand> result = brandMongoGateway.deleteBrand(BRAND_CODE);
 
         Assertions.assertFalse(result.isPresent());
+    }
+
+    @Test
+    void shouldReturnEditedBrandAsDomain() {
+        Mockito.when(brandRepository.findByCode(BRAND_CODE)).thenReturn(Optional.of(brandDocumentOutputOld));
+        Mockito.when(brandRepository.save(brandDocumentOutputOld)).thenReturn(brandDocumentOutput);
+        Optional<Brand> result = brandMongoGateway.editBrand(BRAND_CODE, brand);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(brand, result.get());
+    }
+
+    @Test
+    void editShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(brandRepository.findByCode(BRAND_CODE)).thenReturn(Optional.empty());
+        Optional<Brand> result = brandMongoGateway.editBrand(BRAND_CODE, brand);
+
+        Assertions.assertTrue(result.isEmpty());
+        Mockito.verify(brandRepository, Mockito.times(0)).save(brandDocumentOutput);
+    }
+
+    @Test
+    void shouldRefuseNullSource() {
+        Assertions.assertThrows(InvalidElementException.class, () -> brandMongoGateway.createBrand(null));
     }
 }

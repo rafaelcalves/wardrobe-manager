@@ -7,12 +7,17 @@ import br.com.correa.wardrobemanager.domain.entities.Brand;
 import br.com.correa.wardrobemanager.domain.entities.Category;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.piece.PieceDocument;
-import org.mapstruct.*;
+import br.com.correa.wardrobemanager.config.MapStructConfig;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+
+@Mapper(config = MapStructConfig.class)
 public abstract class PieceDocumentMapper {
     protected BrandSearch brandSearch;
     protected CategorySearch categorySearch;
@@ -30,6 +35,10 @@ public abstract class PieceDocumentMapper {
     @Mapping(target = "brandCode", source = "brand.code")
     @Mapping(target = "categoryCode", source = "category.code")
     abstract PieceDocument toDocument(Piece piece);
+
+    @Mapping(target = "brandCode", source = "brand.code")
+    @Mapping(target = "categoryCode", source = "category.code")
+    abstract PieceDocument toDocument(@MappingTarget PieceDocument target, Piece source);
 
     @Mapping(target = "brand", source = "brandCode", qualifiedByName = "codeToBrand")
     @Mapping(target = "category", source = "categoryCode", qualifiedByName = "codeToCategory")

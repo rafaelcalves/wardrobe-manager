@@ -20,8 +20,16 @@ public class CategoryMongoGateway implements CategoryDSGateway {
     
     @Override
     public Optional<Category> deleteCategory(String categoryCode) {
-        CategoryDocument categoryDocument = categoryRepository.deleteByCode(categoryCode).orElse(null);
-        return Optional.ofNullable(categoryDocumentMapper.toDomain(categoryDocument));
+        Optional<CategoryDocument> categoryDocument = categoryRepository.deleteByCode(categoryCode);
+        return categoryDocument.map(categoryDocumentMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Category> editCategory(String categoryCode, Category category) {
+        Optional<CategoryDocument> categoryDocument = categoryRepository.findByCode(categoryCode);
+        if(categoryDocument.isEmpty()) return Optional.empty();
+        CategoryDocument document = categoryDocumentMapper.toDocument(categoryDocument.get(), category);
+        return Optional.of(categoryDocumentMapper.toDomain(categoryRepository.save(document)));
     }
 
     @Override
@@ -32,8 +40,8 @@ public class CategoryMongoGateway implements CategoryDSGateway {
 
     @Override
     public Optional<Category> getCategoryByCode(String categoryCode) {
-        CategoryDocument categoryDocument = categoryRepository.findByCode(categoryCode).orElse(null);
-        return Optional.ofNullable(categoryDocumentMapper.toDomain(categoryDocument));
+        Optional<CategoryDocument> categoryDocument = categoryRepository.findByCode(categoryCode);
+        return categoryDocument.map(categoryDocumentMapper::toDomain);
     }
 
     @Override

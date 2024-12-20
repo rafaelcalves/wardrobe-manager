@@ -26,8 +26,8 @@ public class BrandMongoGateway implements BrandDSGateway {
 
     @Override
     public Optional<Brand> getBrandByCode(String brandCode) {
-        BrandDocument brandDocument = brandRepository.findByCode(brandCode).orElse(null);
-        return Optional.ofNullable(brandDocumentMapper.toDomain(brandDocument));
+        Optional<BrandDocument> brandDocument = brandRepository.findByCode(brandCode);
+        return brandDocument.map(brandDocumentMapper::toDomain);
     }
 
     @Override
@@ -38,7 +38,15 @@ public class BrandMongoGateway implements BrandDSGateway {
 
     @Override
     public Optional<Brand> deleteBrand(String brandCode) {
-        BrandDocument brandDocument = brandRepository.deleteByCode(brandCode).orElse(null);
-        return Optional.ofNullable(brandDocumentMapper.toDomain(brandDocument));
+        Optional<BrandDocument> brandDocument = brandRepository.deleteByCode(brandCode);
+        return brandDocument.map(brandDocumentMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Brand> editBrand(String brandCode, Brand brand) {
+        Optional<BrandDocument> brandDocument = brandRepository.findByCode(brandCode);
+        if(brandDocument.isEmpty()) return Optional.empty();
+        BrandDocument document = brandDocumentMapper.toDocument(brandDocument.get(), brand);
+        return Optional.of(brandDocumentMapper.toDomain(brandRepository.save(document)));
     }
 }
