@@ -1,0 +1,11 @@
+{
+  "id": "object_id",
+  "name": "category_name_old",
+  "code": "category_code_old",
+  "subCategories": [
+    {
+      "name": "subCategory_name",
+      "code": "subCategory_code"
+    }
+  ]
+}

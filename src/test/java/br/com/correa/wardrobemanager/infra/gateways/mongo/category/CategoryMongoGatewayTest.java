@@ -40,6 +40,8 @@ class CategoryMongoGatewayTest {
     CategoryDocument categoryDocumentInput;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/category/categoryDocument.json")
     CategoryDocument categoryDocumentOutput;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/category/categoryDocument_old.json")
+    CategoryDocument categoryDocumentOutputOld;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/category/categoryDocumentList.json")
     List<CategoryDocument> categoryDocumentList;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/categoryList.json")
@@ -53,7 +55,6 @@ class CategoryMongoGatewayTest {
         Assertions.assertEquals(category, result);
         Mockito.verify(categoryRepository).save(categoryDocumentInput);
     }
-
 
     @Test
     void shouldReturnCategoryAsDomain() {
@@ -95,5 +96,25 @@ class CategoryMongoGatewayTest {
         Optional<Category> result = categoryMongoGateway.deleteCategory(CATEGORY_CODE);
 
         Assertions.assertFalse(result.isPresent());
+    }
+
+
+    @Test
+    void shouldReturnEditedCategoryAsDomain() {
+        Mockito.when(categoryRepository.findByCode(CATEGORY_CODE)).thenReturn(Optional.of(categoryDocumentOutputOld));
+        Mockito.when(categoryRepository.save(categoryDocumentOutputOld)).thenReturn(categoryDocumentOutput);
+        Optional<Category> result = categoryMongoGateway.editCategory(CATEGORY_CODE, category);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(category, result.get());
+    }
+
+    @Test
+    void editShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(categoryRepository.findByCode(CATEGORY_CODE)).thenReturn(Optional.empty());
+        Optional<Category> result = categoryMongoGateway.editCategory(CATEGORY_CODE, category);
+
+        Assertions.assertTrue(result.isEmpty());
+        Mockito.verify(categoryRepository, Mockito.times(0)).save(categoryDocumentOutput);
     }
 }

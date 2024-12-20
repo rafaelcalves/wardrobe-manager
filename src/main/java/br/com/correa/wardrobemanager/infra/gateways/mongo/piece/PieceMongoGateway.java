@@ -25,6 +25,14 @@ public class PieceMongoGateway implements PieceDSGateway {
     }
 
     @Override
+    public Optional<Piece> editPiece(String pieceCode, Piece piece) {
+        Optional<PieceDocument> pieceDocument = pieceRepository.findByCode(pieceCode);
+        if(pieceDocument.isEmpty()) return Optional.empty();
+        PieceDocument document = pieceDocumentMapper.toDocument(pieceDocument.get(), piece);
+        return Optional.of(pieceDocumentMapper.toDomain(pieceRepository.save(document)));
+    }
+
+    @Override
     public Piece createPiece(Piece piece) {
         PieceDocument document = pieceDocumentMapper.toDocument(piece);
         return pieceDocumentMapper.toDomain(pieceRepository.save(document));

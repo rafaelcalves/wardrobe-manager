@@ -31,6 +31,10 @@ public abstract class PieceDocumentMapper {
     @Mapping(target = "categoryCode", source = "category.code")
     abstract PieceDocument toDocument(Piece piece);
 
+    @Mapping(target = "brandCode", source = "brand.code")
+    @Mapping(target = "categoryCode", source = "category.code")
+    abstract PieceDocument toDocument(@MappingTarget PieceDocument target, Piece source);
+
     @Mapping(target = "brand", source = "brandCode", qualifiedByName = "codeToBrand")
     @Mapping(target = "category", source = "categoryCode", qualifiedByName = "codeToCategory")
     abstract Piece toDomain(PieceDocument pieceDocument);

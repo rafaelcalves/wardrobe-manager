@@ -1,0 +1,15 @@
+{
+  "id": "object_id",
+  "code": "piece_code_old",
+  "description": "piece_description_old",
+  "brandCode": "brand_code_old",
+  "predominantColorHex": "#000000",
+  "categoryCode": "category_code_old",
+  "fabric": "piece_fabric_old",
+  "images": [
+    "https://www.image_old.com"
+  ],
+  "links": [
+    "https://www.link_old.com"
+  ]
+}

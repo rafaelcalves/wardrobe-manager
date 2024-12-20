@@ -25,6 +25,14 @@ public class CategoryMongoGateway implements CategoryDSGateway {
     }
 
     @Override
+    public Optional<Category> editCategory(String categoryCode, Category category) {
+        Optional<CategoryDocument> categoryDocument = categoryRepository.findByCode(categoryCode);
+        if(categoryDocument.isEmpty()) return Optional.empty();
+        CategoryDocument document = categoryDocumentMapper.toDocument(categoryDocument.get(), category);
+        return Optional.of(categoryDocumentMapper.toDomain(categoryRepository.save(document)));
+    }
+
+    @Override
     public Category createCategory(Category category) {
         CategoryDocument document = categoryDocumentMapper.toDocument(category);
         return categoryDocumentMapper.toDomain(categoryRepository.save(document));

@@ -56,6 +56,8 @@ class PieceMongoGatewayTest {
     Category category;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/piece/pieceDocument.json")
     PieceDocument pieceDocumentOutput;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/piece/pieceDocument_old.json")
+    PieceDocument pieceDocumentOutputOld;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/persistence/mongo/piece/pieceDocumentList.json")
     List<PieceDocument> pieceDocumentList;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/pieceList.json")
@@ -124,5 +126,27 @@ class PieceMongoGatewayTest {
         Optional<Piece> result = pieceMongoGateway.deletePiece(PIECE_CODE);
 
         Assertions.assertFalse(result.isPresent());
+    }
+
+    @Test
+    void shouldReturnEditedPieceAsDomain() throws ElementNotFoundException {
+        Mockito.when(pieceRepository.findByCode(PIECE_CODE)).thenReturn(Optional.of(pieceDocumentOutputOld));
+        Mockito.when(pieceRepository.save(pieceDocumentOutputOld)).thenReturn(pieceDocumentOutput);
+        Mockito.when(brandSearch.getByCode(BRAND_CODE)).thenReturn(brand);
+        Mockito.when(categorySearch.getByCode(CATEGORY_CODE)).thenReturn(category);
+
+        Optional<Piece> result = pieceMongoGateway.editPiece(PIECE_CODE, piece);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(piece, result.get());
+    }
+
+    @Test
+    void editShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(pieceRepository.findByCode(PIECE_CODE)).thenReturn(Optional.empty());
+        Optional<Piece> result = pieceMongoGateway.editPiece(PIECE_CODE, piece);
+
+        Assertions.assertTrue(result.isEmpty());
+        Mockito.verify(pieceRepository, Mockito.times(0)).save(pieceDocumentOutput);
     }
 }
