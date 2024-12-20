@@ -2,6 +2,7 @@ package br.com.correa.wardrobemanager.infra.controller.piece;
 
 import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandSearch;
 import br.com.correa.wardrobemanager.application.usecases.category.CategorySearch;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceCreation;
@@ -118,6 +119,11 @@ class PieceControllerTest {
         Assertions.assertThrows(ElementNotFoundException.class, () -> pieceController.delete(PIECE_CODE));
 
         Mockito.verify(pieceDeletion).delete(PIECE_CODE);
+    }
+
+    @Test
+    void shouldRefuseNullSource() {
+        Assertions.assertThrows(InvalidElementException.class, () -> pieceController.create(null));
     }
 
 }

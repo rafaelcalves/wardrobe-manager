@@ -1,5 +1,6 @@
 package br.com.correa.wardrobemanager.infra.gateways.mongo.brand;
 
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.brand.BrandDocument;
@@ -123,5 +124,10 @@ class BrandMongoGatewayTest {
 
         Assertions.assertTrue(result.isEmpty());
         Mockito.verify(brandRepository, Mockito.times(0)).save(brandDocumentOutput);
+    }
+
+    @Test
+    void shouldRefuseNullSource() {
+        Assertions.assertThrows(InvalidElementException.class, () -> brandMongoGateway.createBrand(null));
     }
 }

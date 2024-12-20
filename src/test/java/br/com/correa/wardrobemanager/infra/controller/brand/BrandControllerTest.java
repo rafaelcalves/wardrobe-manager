@@ -2,6 +2,7 @@ package br.com.correa.wardrobemanager.infra.controller.brand;
 
 import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandCreation;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandDeletion;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandEdition;
@@ -110,5 +111,10 @@ class BrandControllerTest {
         Assertions.assertThrows(ElementNotFoundException.class, () -> brandController.edit(BRAND_CODE, brandDto));
 
         Mockito.verify(brandEdition).edit(BRAND_CODE, brand);
+    }
+
+    @Test
+    void shouldRefuseNullSource() {
+        Assertions.assertThrows(InvalidElementException.class, () -> brandController.create(null));
     }
 }

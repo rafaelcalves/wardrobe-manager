@@ -1,5 +1,6 @@
 package br.com.correa.wardrobemanager.infra.gateways.mongo.category;
 
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Category;
 import br.com.correa.wardrobemanager.infra.persistence.mongo.category.CategoryDocument;
@@ -116,5 +117,10 @@ class CategoryMongoGatewayTest {
 
         Assertions.assertTrue(result.isEmpty());
         Mockito.verify(categoryRepository, Mockito.times(0)).save(categoryDocumentOutput);
+    }
+
+    @Test
+    void shouldRefuseNullSource() {
+        Assertions.assertThrows(InvalidElementException.class, () -> categoryMongoGateway.createCategory(null));
     }
 }

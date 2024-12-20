@@ -6,12 +6,13 @@ import br.com.correa.wardrobemanager.application.usecases.category.CategorySearc
 import br.com.correa.wardrobemanager.domain.entities.Brand;
 import br.com.correa.wardrobemanager.domain.entities.Category;
 import br.com.correa.wardrobemanager.domain.entities.Piece;
+import br.com.correa.wardrobemanager.config.MapStructConfig;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(config = MapStructConfig.class)
 public abstract class PieceDtoMapper {
     protected BrandSearch brandSearch;
     protected CategorySearch categorySearch;

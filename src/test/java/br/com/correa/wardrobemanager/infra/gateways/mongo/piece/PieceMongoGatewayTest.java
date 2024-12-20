@@ -1,6 +1,7 @@
 package br.com.correa.wardrobemanager.infra.gateways.mongo.piece;
 
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandSearch;
 import br.com.correa.wardrobemanager.application.usecases.category.CategorySearch;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
@@ -148,5 +149,10 @@ class PieceMongoGatewayTest {
 
         Assertions.assertTrue(result.isEmpty());
         Mockito.verify(pieceRepository, Mockito.times(0)).save(pieceDocumentOutput);
+    }
+
+    @Test
+    void shouldRefuseNullSource() {
+        Assertions.assertThrows(InvalidElementException.class, () -> pieceMongoGateway.createPiece(null));
     }
 }

@@ -2,6 +2,7 @@ package br.com.correa.wardrobemanager.infra.controller;
 
 import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
+import br.com.correa.wardrobemanager.application.exceptions.InvalidElementException;
 import br.com.correa.wardrobemanager.domain.exceptions.InvalidEntityAttributeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -27,6 +28,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({InvalidEntityAttributeException.class})
     public ProblemDetail handleElementNotFoundException(InvalidEntityAttributeException e, WebRequest request) {
+        return getProblemDetail(HttpStatus.BAD_REQUEST, e.getMessage(), request);
+    }
+
+    @ExceptionHandler({InvalidElementException.class})
+    public ProblemDetail handleInvalidElementException(InvalidElementException e, WebRequest request) {
         return getProblemDetail(HttpStatus.BAD_REQUEST, e.getMessage(), request);
     }
 
