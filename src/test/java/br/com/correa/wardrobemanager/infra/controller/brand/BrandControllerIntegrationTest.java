@@ -48,6 +48,12 @@ class BrandControllerIntegrationTest {
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
     String brandDtoJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_old.json")
+    String brandDtoOldJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_new.json")
+    String brandDtoNewJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_old.json")
+    BrandDto brandDtoOld;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_shouldDelete.json")
     String brandDtoShouldDeleteJson;
     @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto_shouldDelete.json")
@@ -142,6 +148,21 @@ class BrandControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(notFoundDeleteAsProblemJson));
+    }
+
+    @Test
+    @Order(7)
+    void shouldSuccessfullyEditElement() throws Exception {
+        mockMvc.perform(post("/brand")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoOldJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/brand/" + brandDtoOld.code())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(brandDtoNewJson))
+                .andExpect(status().isOk())
+                .andExpect(content().json(brandDtoNewJson));
     }
 
     private void assertBrandCreation(BrandDto brand) throws Exception {

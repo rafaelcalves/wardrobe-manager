@@ -41,4 +41,12 @@ public class BrandMongoGateway implements BrandDSGateway {
         BrandDocument brandDocument = brandRepository.deleteByCode(brandCode).orElse(null);
         return Optional.ofNullable(brandDocumentMapper.toDomain(brandDocument));
     }
+
+    @Override
+    public Optional<Brand> editBrand(String brandCode, Brand brand) {
+        Optional<BrandDocument> brandDocument = brandRepository.findByCode(brandCode);
+        if(brandDocument.isEmpty()) return Optional.empty();
+        BrandDocument document = brandDocumentMapper.toDocument(brandDocument.get(), brand);
+        return Optional.of(brandDocumentMapper.toDomain(brandRepository.save(document)));
+    }
 }
