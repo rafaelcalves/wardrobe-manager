@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface CategoryRepository extends MongoRepository<CategoryDocument, String> {
     Optional<CategoryDocument> findByCode(String code);
 
-    String code(String code);
+    Optional<CategoryDocument> deleteByCode(String code);
 }

@@ -106,4 +106,23 @@ class PieceMongoGatewayTest {
 
         Assertions.assertTrue(result.isEmpty());
     }
+
+    @Test
+    void shouldReturnDeletedPiece() throws ElementNotFoundException {
+        Mockito.when(pieceRepository.deleteByCode(PIECE_CODE)).thenReturn(Optional.of(pieceDocumentOutput));
+        Mockito.when(brandSearch.getByCode(BRAND_CODE)).thenReturn(brand);
+        Mockito.when(categorySearch.getByCode(CATEGORY_CODE)).thenReturn(category);
+        Optional<Piece> result = pieceMongoGateway.deletePiece(PIECE_CODE);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(piece, result.get());
+    }
+
+    @Test
+    void deleteShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(pieceRepository.deleteByCode(PIECE_CODE)).thenReturn(Optional.empty());
+        Optional<Piece> result = pieceMongoGateway.deletePiece(PIECE_CODE);
+
+        Assertions.assertFalse(result.isPresent());
+    }
 }

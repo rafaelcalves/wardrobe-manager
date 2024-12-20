@@ -1,0 +1,7 @@
+{
+  "type": "about:blank",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Piece not found",
+  "instance": "/piece/piece_code_del"
+}

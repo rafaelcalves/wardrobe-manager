@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryDSGateway {
+    Optional<Category> deleteCategory(String categoryCode);
     Category createCategory(Category category);
     Optional<Category> getCategoryByCode(String categoryCode);
     List<Category> getAllCategories();

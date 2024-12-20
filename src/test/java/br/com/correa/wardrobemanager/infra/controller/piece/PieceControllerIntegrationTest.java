@@ -1,7 +1,6 @@
 package br.com.correa.wardrobemanager.infra.controller.piece;
 
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
-import br.com.correa.wardrobemanager.domain.entities.Piece;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hosuaby.inject.resources.junit.jupiter.GivenJsonResource;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
@@ -24,8 +23,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,8 +44,6 @@ class PieceControllerIntegrationTest {
 
     @WithJacksonMapper
     ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
-    @GivenJsonResource("json/br/com/correa/wardrobemanager/domain/entities/piece.json")
-    Piece piece;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto.json")
     String pieceDtoJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/brand/brandDto.json")
@@ -66,8 +62,12 @@ class PieceControllerIntegrationTest {
     String notFoundAsProblemJson;
     @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/code_invalid_exception.json")
     String codeInvalidAsProblemJson;
-    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/name_invalid_exception.json")
-    String nameInvalidAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/exception/not_found_exception_delete.json")
+    String notFoundDeleteAsProblemJson;
+    @GivenTextResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_shouldDelete.json")
+    String pieceDtoShouldDeleteJson;
+    @GivenJsonResource("json/br/com/correa/wardrobemanager/infra/controller/piece/pieceDto_shouldDelete.json")
+    PieceDto pieceDtoShouldDelete;
 
     @Test
     @Order(1)
@@ -116,6 +116,25 @@ class PieceControllerIntegrationTest {
                         .content(noCodePieceDtoJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(codeInvalidAsProblemJson));
+    }
+
+    @Test
+    @Order(5)
+    void shouldSuccessfullyDeleteElement() throws Exception {
+        mockMvc.perform(post("/piece")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(pieceDtoShouldDeleteJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/piece/" + pieceDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(pieceDtoShouldDeleteJson));
+
+        mockMvc.perform(delete("/piece/" + pieceDtoShouldDelete.code())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json(notFoundDeleteAsProblemJson));
     }
 
     private void assertPieceCreation(PieceDto piece) throws Exception {

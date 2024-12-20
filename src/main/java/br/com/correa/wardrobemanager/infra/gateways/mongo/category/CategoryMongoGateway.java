@@ -17,6 +17,12 @@ import java.util.Optional;
 public class CategoryMongoGateway implements CategoryDSGateway {
     private final CategoryRepository categoryRepository;
     private final CategoryDocumentMapper categoryDocumentMapper;
+    
+    @Override
+    public Optional<Category> deleteCategory(String categoryCode) {
+        CategoryDocument categoryDocument = categoryRepository.deleteByCode(categoryCode).orElse(null);
+        return Optional.ofNullable(categoryDocumentMapper.toDomain(categoryDocument));
+    }
 
     @Override
     public Category createCategory(Category category) {

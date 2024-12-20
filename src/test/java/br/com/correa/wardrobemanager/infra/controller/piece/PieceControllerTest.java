@@ -5,6 +5,7 @@ import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundExcep
 import br.com.correa.wardrobemanager.application.usecases.brand.BrandSearch;
 import br.com.correa.wardrobemanager.application.usecases.category.CategorySearch;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceCreation;
+import br.com.correa.wardrobemanager.application.usecases.piece.PieceDeletion;
 import br.com.correa.wardrobemanager.application.usecases.piece.PieceSearch;
 import br.com.correa.wardrobemanager.config.ObjectMapperConfig;
 import br.com.correa.wardrobemanager.domain.entities.Brand;
@@ -41,6 +42,9 @@ class PieceControllerTest {
     private PieceCreation pieceCreation;
     @Mock
     private PieceSearch pieceSearch;
+    @Mock
+    private PieceDeletion pieceDeletion;
+
     @Mock
     private BrandSearch brandSearch;
     @Mock
@@ -97,6 +101,23 @@ class PieceControllerTest {
         List<PieceDto> result = pieceController.getAll();
 
         Assertions.assertArrayEquals(pieceDtoList.toArray(), result.toArray());
+    }
+
+    @Test
+    void shouldRedirectToDeleteUseCaseAndReturnDeletedElementIfSuccess() throws ElementNotFoundException {
+        Mockito.when(pieceDeletion.delete(PIECE_CODE)).thenReturn(piece);
+        PieceDto result = pieceController.delete(PIECE_CODE);
+
+        Assertions.assertEquals(pieceDto, result);
+        Mockito.verify(pieceDeletion).delete(PIECE_CODE);
+    }
+
+    @Test
+    void shouldRedirectToDeleteUseCaseAndThrowException() throws ElementNotFoundException {
+        Mockito.when(pieceDeletion.delete(PIECE_CODE)).thenThrow(ElementNotFoundException.class);
+        Assertions.assertThrows(ElementNotFoundException.class, () -> pieceController.delete(PIECE_CODE));
+
+        Mockito.verify(pieceDeletion).delete(PIECE_CODE);
     }
 
 }

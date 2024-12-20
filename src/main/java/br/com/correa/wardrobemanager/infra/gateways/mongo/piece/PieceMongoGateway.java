@@ -19,6 +19,12 @@ public class PieceMongoGateway implements PieceDSGateway {
     private final PieceRepository pieceRepository;
 
     @Override
+    public Optional<Piece> deletePiece(String pieceCode) {
+        PieceDocument pieceDocument = pieceRepository.deleteByCode(pieceCode).orElse(null);
+        return Optional.ofNullable(pieceDocumentMapper.toDomain(pieceDocument));
+    }
+
+    @Override
     public Piece createPiece(Piece piece) {
         PieceDocument document = pieceDocumentMapper.toDocument(piece);
         return pieceDocumentMapper.toDomain(pieceRepository.save(document));

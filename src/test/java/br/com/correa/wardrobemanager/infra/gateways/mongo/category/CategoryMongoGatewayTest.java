@@ -79,4 +79,21 @@ class CategoryMongoGatewayTest {
 
         Assertions.assertTrue(result.isEmpty());
     }
+    
+    @Test
+    void shouldReturnDeletedCategory() {
+        Mockito.when(categoryRepository.deleteByCode(CATEGORY_CODE)).thenReturn(Optional.of(categoryDocumentOutput));
+        Optional<Category> result = categoryMongoGateway.deleteCategory(CATEGORY_CODE);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(category, result.get());
+    }
+
+    @Test
+    void deleteShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(categoryRepository.deleteByCode(CATEGORY_CODE)).thenReturn(Optional.empty());
+        Optional<Category> result = categoryMongoGateway.deleteCategory(CATEGORY_CODE);
+
+        Assertions.assertFalse(result.isPresent());
+    }
 }

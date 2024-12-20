@@ -1,10 +1,5 @@
 [
   {
-    "code": "brand_code",
-    "name": "brand_name",
-    "webSite": "https://www.brand.com"
-  },
-  {
     "code": "brand_code1",
     "name": "brand_name1",
     "webSite": "https://www.brand1.com"

@@ -3,6 +3,7 @@ package br.com.correa.wardrobemanager.infra.controller.category;
 import br.com.correa.wardrobemanager.application.exceptions.ElementCodeConflictException;
 import br.com.correa.wardrobemanager.application.exceptions.ElementNotFoundException;
 import br.com.correa.wardrobemanager.application.usecases.category.CategoryCreation;
+import br.com.correa.wardrobemanager.application.usecases.category.CategoryDeletion;
 import br.com.correa.wardrobemanager.application.usecases.category.CategorySearch;
 import br.com.correa.wardrobemanager.domain.entities.Category;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryCreation categoryCreation;
     private final CategorySearch categorySearch;
+    private final CategoryDeletion categoryDeletion;
     private final CategoryDtoMapper categoryDtoMapper;
 
     @PostMapping
@@ -33,5 +35,10 @@ public class CategoryController {
     @GetMapping
     public List<CategoryDto> getAll() {
         return categoryDtoMapper.toDto(categorySearch.getAll());
+    }
+
+    @DeleteMapping("/{code}")
+    public CategoryDto delete(@PathVariable String code) throws ElementNotFoundException {
+        return categoryDtoMapper.toDto(categoryDeletion.delete(code));
     }
 }

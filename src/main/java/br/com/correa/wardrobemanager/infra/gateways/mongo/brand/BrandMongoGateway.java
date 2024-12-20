@@ -35,4 +35,10 @@ public class BrandMongoGateway implements BrandDSGateway {
         List<BrandDocument> brandDocumentList = Objects.requireNonNullElse(brandRepository.findAll(), Collections.emptyList());
         return brandDocumentMapper.toDomain(brandDocumentList);
     }
+
+    @Override
+    public Optional<Brand> deleteBrand(String brandCode) {
+        BrandDocument brandDocument = brandRepository.deleteByCode(brandCode).orElse(null);
+        return Optional.ofNullable(brandDocumentMapper.toDomain(brandDocument));
+    }
 }

@@ -64,6 +64,14 @@ class BrandMongoGatewayTest {
     }
 
     @Test
+    void searchShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(brandRepository.findByCode(BRAND_CODE)).thenReturn(Optional.empty());
+        Optional<Brand> result = brandMongoGateway.getBrandByCode(BRAND_CODE);
+
+        Assertions.assertFalse(result.isPresent());
+    }
+
+    @Test
     void shouldReturnBrandListAsDomain() {
         Mockito.when(brandRepository.findAll()).thenReturn(brandDocumentList);
         List<Brand> result = brandMongoGateway.getAllBrands();
@@ -77,5 +85,22 @@ class BrandMongoGatewayTest {
         List<Brand> result = brandMongoGateway.getAllBrands();
 
         Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldReturnDeletedBrand() {
+        Mockito.when(brandRepository.deleteByCode(BRAND_CODE)).thenReturn(Optional.of(brandDocumentOutput));
+        Optional<Brand> result = brandMongoGateway.deleteBrand(BRAND_CODE);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(brand, result.get());
+    }
+
+    @Test
+    void deleteShouldReturnOptionalEmptyIfDoesntExists() {
+        Mockito.when(brandRepository.deleteByCode(BRAND_CODE)).thenReturn(Optional.empty());
+        Optional<Brand> result = brandMongoGateway.deleteBrand(BRAND_CODE);
+
+        Assertions.assertFalse(result.isPresent());
     }
 }
