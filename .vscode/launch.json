@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Local",
+            "request": "launch",
+            "mainClass": "br.com.correa.wardrobemanager.Application",
+            "projectName": "wardrobe-manager",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "local"
+            }
+        }
+    ]
+}
